@@ -1,0 +1,62 @@
+seed: 0
+
+gpu: 'cuda:0'
+
+proto_path: 'prototypes-mean/prototypes-n-500d-1k-1000e-100cl.npy'
+
+
+model:
+  custom: true
+  arch: 'ResNet18'
+  kwargs: {'num_classes': 500}
+  tvision:
+    name: 'resnet18'
+    args: {}
+
+data:
+  flag: '100'
+  dir: './cifar-data'
+  batch_size: 128
+  trans: true
+
+
+train:
+  epochs: 200
+  lr: 0.005
+  lr_scheduler: 'cyclic'
+  step: 5
+  milestones: [47000]
+  gamma: 0.2
+  lr_min: 0.001
+  lr_max: 0.006
+  cyclic_step_size: 2000
+  weight_decay: 0.00005
+  momentum: 0.9
+  loss_reduction: "inf"
+
+test: 10
+
+resume:
+  # path: './models/CIFAR_PROTO_EXP_ResNet18-ProtoN50d_99.pth'
+  # path: './models/CIFAR_PROTO_EXP_100_ResNetProto18-ProtoN50010e2_149.pth'
+  path: './models/CIFAR_PROTO_EXP_100_ResNet18-ProtoN50010e2_119.pth'
+
+pgd:
+  epsilon: 8.
+  alpha: 2.
+  iter: 100
+  restarts: 1
+  delta-init: 'random'
+
+opt:
+  level: 'O2'
+  loss_scale: 1.0
+  store: true
+
+logger:
+  wandb: true
+  project: 'CIFAR_PROTO_EXP_100'
+  run: 'ResNet18-10010emean'
+
+save:
+  epochs: 10

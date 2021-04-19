@@ -1,0 +1,57 @@
+
+seed: 0
+
+gpu: 'cuda:1'
+
+model:
+  custom: true
+  arch: 'ResNet18'
+  kwargs: {'num_classes': 100}
+  tvision:
+    name: 'resnet18'
+    args: {}
+
+data:
+  flag: '100'
+  dir: './cifar-data'
+  batch_size: 128
+  trans: true
+
+train:
+  epochs: 100
+  lr: 0.001
+  lr_scheduler: 'cyclic'
+  step: 5
+  milestones: [40000, 60000]
+  gamma: 0.1
+  lr_min: 0.001
+  lr_max: 0.006
+  cyclic_step_size: 2000
+  weight_decay: 0.00005
+  momentum: 0.9
+
+test: 10
+
+resume:
+  path: './models/CIFAR_PROTO_EXP_100_ResNet18-PGD_39.pth'
+
+
+pgd:
+  epsilon: 8
+  alpha: 2
+  iter: 100
+  restarts: 1
+  delta-init: 'random'
+
+opt:
+  level: 'O2'
+  loss_scale: 1.0
+  store: true
+
+logger:
+  wandb: true
+  project: 'CIFAR_PROTO_EXP_100'
+  run: 'ResNet18-Clean-Cyclic'
+
+save:
+  epochs: 10

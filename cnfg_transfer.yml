@@ -1,0 +1,90 @@
+seed: 0
+
+gpu: 'cuda:1'
+
+model:
+  custom: true
+  arch: 'ResNet18'
+  kwargs: {'num_classes': 10}
+  # kwargs: {'num_classes': 100}
+  # arch: 'WideResNet'
+  # kwargs: {'depth': 34, 'num_classes': 10, 'widen_factor': 10}
+  # arch: 'PreActResNet18'
+  # kwargs: {'num_classes': 100}
+
+
+resume:
+  path: './models/CIFAR_PROTO_EXP_10_clean.0,1-0,3_119.pth'
+  # path: './models/cifar10_wide10_linf_eps8.pth'
+  # path : './models/cifar100_linf_eps8.pth'
+
+test_model:
+  custom: true
+  arch: 'ResNet18'
+  kwargs: {'num_classes': 100}
+  # arch: 'ResNet18'
+  # kwargs: {'num_classes': 500}
+
+test_model_resume:
+  path: './models/CIFAR_PROTO_EXP_10_100d_127.pth'
+  # path: './models/CIFAR_PROTO_EXP_100_ResNet18-500d-5000emeanc_106.pth'
+
+
+# test_model:
+#   custom: true
+#   # arch: 'WideResNet'
+#   # kwargs: {'depth': 34, 'num_classes': 10, 'widen_factor': 10}
+#   arch: 'PreActResNet18'
+#   kwargs: {'num_classes': 100}
+
+# test_model_resume:
+#   # path: './models/cifar10_wide10_linf_eps8.pth'
+#   path : './models/cifar100_linf_eps8.pth'
+
+
+
+proto_path: 'prototypes/prototypes-n-100d-1k-100e-10cl.npy'
+# proto_path: 'prototypes-mean/prototypes-n-500d-1k-5000e-100cl.npy'
+
+data:
+  flag: '10'
+  # flag: '100'
+  dir: './cifar-data'
+  batch_size: 128
+  trans: true
+
+train:
+  epochs: 200
+  lr: 0.1
+  lr_scheduler: 'multistep'
+  step: 5
+  milestones: [40000, 60000]
+  gamma: 0.1
+  lr_min: 0.001
+  lr_max: 0.006
+  cyclic_step_size: 2000
+  weight_decay: 0.00005
+  momentum: 0.9
+  loss_reduction: "inf"
+
+test: 10
+
+pgd:
+  epsilon: 8.
+  alpha: 2.
+  iter: 20
+  restarts: 1
+  delta-init: 'random'
+
+opt:
+  level: 'O2'
+  loss_scale: 1.0
+  store: true
+
+logger:
+  wandb: true
+  project: 'CIFAR_PROTO_EXP_10'
+  run: 'PGD'
+
+save:
+  epochs: 10
